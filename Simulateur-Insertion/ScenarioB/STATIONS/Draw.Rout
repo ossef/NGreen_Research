@@ -1,0 +1,46 @@
+
+R version 3.2.3 (2015-12-10) -- "Wooden Christmas-Tree"
+Copyright (C) 2015 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R est un logiciel libre livré sans AUCUNE GARANTIE.
+Vous pouvez le redistribuer sous certaines conditions.
+Tapez 'license()' ou 'licence()' pour plus de détails.
+
+R est un projet collaboratif avec de nombreux contributeurs.
+Tapez 'contributors()' pour plus d'information et
+'citation()' pour la façon de le citer dans les publications.
+
+Tapez 'demo()' pour des démonstrations, 'help()' pour l'aide
+en ligne ou 'help.start()' pour obtenir l'aide au format HTML.
+Tapez 'q()' pour quitter R.
+
+> #Execution : R CMD BATCH  Draw.R
+> 
+> 
+> 
+> 
+> #-------------CourbeLines of Waiting PDUs -----------------
+> modelname1 = "MeanFilling.data"
+> data1 = read.table(modelname1)
+> attach(data1);
+> 
+> 
+> 
+> plot(V1,V2,type="o",las=1,lab=c(10, 6, 1), pch=3,col="black",xlab="Number of stations", ylab="Number of used slots", main="Occupency of the ring with 150 slots")
+> #barplot(as.vector(tab[2:length(tab[,1]),2]), names.arg=as.vector(tab[2:length(tab[,1]),1]),xlab = "Delay",ylab = "Occurency",col = "blue", main = paste("Occurency of time Delay, station",(i+1)/2), border = "black")
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> proc.time()
+utilisateur     système      écoulé 
+      0.276       0.012       0.279 

@@ -1,0 +1,92 @@
+# -----------! pour lancer et obtenir temps d'execution en seconde du script : "time -p ./script" !--------------
+
+#!/bin/bash
+
+BufferSize='250'; #Capacité de la file
+model='test-ngreen-mod2-250';  #Nom du model créé
+#seuil='190';
+#deadline='40';
+
+if test -e ResultatsX.data
+then rm ResultatsX.data
+fi
+
+if test -e ResultatsH.data
+then rm ResultatsH.data
+fi
+
+if test -e ResultatsE.data
+then rm ResultatsE.data
+fi
+
+for ((deadline = 10; deadline <61; deadline +=10))
+do 
+
+for ((seuil = 150; seuil <220; seuil +=22))
+do 
+
+if test -e $model.resultat
+then rm $model.resultat
+fi
+
+if test -e $model.cd
+then rm $model.cd
+fi
+
+if test -e $model.sz
+then rm $model.sz
+fi
+
+if test -e $model.Rii
+then rm $model.Rii
+fi
+
+if test -e $model.tgf
+then rm $model.tgf
+fi
+
+if test -e $model.pi
+then rm $model.pi
+fi
+
+
+
+#Generation de la chaine de markov sous forme Rii
+gcc generMarkov.c -o genMarkov
+./genMarkov -f $model $seuil $deadline
+
+#Creation du ficher tgf
+gcc Lam2TGF.c -o tgf
+./tgf -f $model 
+
+
+#Generation de la matrice transposee Cii
+gcc convertir.c -o convertir
+./convertir $model.Rii Cii
+
+#Calcul de la distribution stationnaire en DAG algorithme
+gcc Pi-ngreen.c -o ngreen
+time -p ./ngreen -f $model
+
+
+#Calcul des recompenses (perte/energies)
+gcc rewardComponentGreen.c -o rewardGreen -lm
+./rewardGreen -f $model $seuil $deadline
+
+
+done
+done
+
+ 
+#Affichage Dist stats et X et H pour la derniere experience
+#chmod +x DrawMap.R
+#R CMD BATCH "DrawMap.R"
+
+#Affichage des resultats pour chaque experience
+chmod +x DrawRes.R
+R CMD BATCH "DrawRes.R"
+
+
+
+
+

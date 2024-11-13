@@ -1,0 +1,32 @@
+#Script simulation et affichage de resultat avec langage R
+#!/bin/bash
+
+TIMEMAX='100000';
+STATIONS='29';
+
+if test -e STATIONS29.InsrtTime
+then rm STATIONS29.InsrtTime
+fi
+
+#Simulation de l'anneau
+gcc simulateur.c -o simulateur
+
+for ((i = 0; i < 30; i+=1 ))
+do
+
+./simulateur
+
+done
+
+
+#R CMD BATCH "--args $STATIONS $TIMEMAX" Draw.R
+
+#R CMD BATCH DRAWF.R 
+#for ((i = 0; i <10; i += 1))
+#do
+#done
+
+
+
+
+

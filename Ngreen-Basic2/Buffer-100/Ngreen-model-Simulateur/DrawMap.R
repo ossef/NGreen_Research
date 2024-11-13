@@ -1,0 +1,67 @@
+#Execution : R CMD BATCH "Draw.R"
+
+variables = commandArgs(trailingOnly=TRUE)
+modelname1 = "test-ngreen-mod-sim.cd"
+modelname2 = "test-ngreen-mod-sim.pi.Trunc"
+modelname3 = "test-ngreen-mod-sim.MargCd.X.pi"
+modelname4 = "test-ngreen-mod-sim.MargCd.H.pi"
+
+data1 = read.table(modelname1)
+attach(data1);
+i =V1
+X =V2
+H =V3
+
+
+data2 = read.table(modelname2)
+attach(data2);
+Pi =log10(V1)
+
+
+library(lattice)
+
+#-------------3Dimension---------------
+
+levelplot(
+  Pi ~ X*H, 
+  xlab = "X", ylab = "H",
+  main = "Stationnary distribution",
+  col.regions = topo.colors(20)  #cm terrain topo heat
+)
+
+
+#-------------Courbe1-----------------
+data3 = read.table(modelname3)
+attach(data3);
+x =V1
+pi1 =V2
+
+
+
+barplot(pi1,names.arg = x,xlab = "X",ylab = "P(X/Sortie)",col = "blue", main = "Courbe de la marginale conditionnel sur les paquets qui sortent",border = "black")
+abline(v=96.8, col="Red",lwd="3",lty=1)
+legend("topleft", legend=c("Proba","Seuil"),
+       col=c("blue","red"), lty=1:1, cex=1.3)
+
+plot(x,pi1,type="h",xlab="X",ylab="Marginale sortie de X")
+title("Courbe de la marginale conditionnel sur les paquets qui sortent") 
+
+
+#--------------Courbe2-----------------
+
+data4 = read.table(modelname4)
+attach(data4);
+h =V1
+pi2 =V2
+
+barplot(pi2,names.arg = h,xlab = "H",ylab = "P(H/Sortie)",col = "blue", main = "Marginale sortie de H", border = "black")
+abline(v=18.2, col="Red",lwd="3",lty=1)
+legend("topleft", legend=c("Proba","Seuil"),
+       col=c("blue","red"), lty=1:1, cex=1.3)
+
+
+plot(h,pi2,type="h",xlab="H",ylab="Marginale sortie de H")
+title("Courbe de la marginale conditionnel sur l'horloge") 
+legend(40, 0.145, legend=c("Pi0"),
+       col=c("black"), lty=1:1, cex=1.2)
+

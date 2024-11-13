@@ -1,0 +1,61 @@
+# -----------! pour lancer et obtenir temps d'execution en seconde du script : "time -p ./script" !--------------
+#!/bin/bash
+
+BufferSize='100'; #Capacité de la file
+model='Ngreen-Module-Lin';  #Nom du model créé
+seuil='70';
+deadline='30';
+
+if test -e $model.Rii
+then rm *.Rii
+fi
+
+if test -e $model.Cii
+then rm *.Cii
+fi
+
+if test -e $model.cd
+then rm *.cd
+fi
+
+if test -e $model.sz
+then rm *.sz
+fi
+
+if test -e $model.pi
+then rm *.pi
+fi
+
+if test -e $model.tgf
+then rm $model.tgf
+fi
+
+
+#Generation de la chaine de markov 
+gcc generMarkov.c -o genMarkov
+./genMarkov -f $model $seuil $deadline
+
+
+#Creation du ficher tgf
+gcc Lam2TGF.c -o tgf
+./tgf -f $model 
+
+
+#conversion de la matrice Rii en Cii
+gcc convertir.c -o convertir
+./convertir $model.Rii Cii
+
+
+#Calcul de la distribution stationnaire avec le nouvel algo
+gcc Pi-ngreen.c -o pi-ngreen
+./pi-ngreen -f $model
+
+
+ 
+
+
+
+
+
+
+

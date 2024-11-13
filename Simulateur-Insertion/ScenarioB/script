@@ -1,0 +1,12 @@
+#Script simulation et affichage de resultat avec langage R
+#!/bin/bash
+
+TIMEMAX='10000';
+STATIONS='18';
+
+
+#Simulation de l'anneau
+gcc simulateur.c -o simulateur
+./simulateur
+
+R CMD BATCH "--args $STATIONS $TIMEMAX" Draw.R

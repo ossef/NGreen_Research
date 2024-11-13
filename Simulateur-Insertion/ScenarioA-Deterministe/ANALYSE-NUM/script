@@ -1,0 +1,63 @@
+# -----------! pour lancer et obtenir temps d'execution en seconde du script : "time -p ./script" !--------------
+
+#!/bin/bash
+
+model='Model-Deter-60-22-4';  #Nom du model créé
+
+
+
+if test -e $model.cd
+then rm $model.cd
+fi
+
+if test -e $model.sz
+then rm $model.sz
+fi
+
+if test -e $model.Rii
+then rm $model.Rii
+fi
+
+if test -e $model.tgf
+then rm $model.tgf
+fi
+
+if test -e $model.pi
+then rm $model.pi
+fi
+
+
+
+
+#Generation de la chaine de markov sous forme Rii
+gcc generMarkov.c -o genMarkov
+./genMarkov -f $model 
+
+
+#Creation du ficher tgf
+gcc Lam2TGF.c -o tgf
+./tgf -f $model 
+
+
+#Calcul de la distribution stationnaire (GTH-Creu)
+gcc bis-newgthcreux.c -o newgthcreu
+./newgthcreu -f $model
+
+
+#Calcul des recompenses (perte/energies)
+gcc rewardComponentMit.c -o rewardMit -lm
+./rewardMit -f $model 
+
+#Calcule de la marginal
+gcc Marginal.c -o marginal
+./marginal -f $model
+
+
+ 
+
+
+
+
+
+
+

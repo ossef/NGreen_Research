@@ -1,0 +1,78 @@
+# -----------! pour lancer et obtenir temps d'execution en seconde du script : "time -p ./script" !--------------
+#!/bin/bash
+
+BufferSize='15'; #Capacité de la file
+model='Ngreen-Module-15';  #Nom du model créé
+seuil='10';
+deadline='3';
+
+if test -e $model.Rii
+then rm *.Rii
+fi
+
+if test -e $model.Cii
+then rm *.Cii
+fi
+
+if test -e $model.cd
+then rm *.cd
+fi
+
+if test -e $model.sz
+then rm *.sz
+fi
+
+if test -e $model.pi
+then rm *.pi
+fi
+
+if test -e $model.tgf
+then rm $model.tgf
+fi
+
+
+#Generation de la chaine de markov : Matrice P
+gcc generMarkov.c -o genMarkov
+./genMarkov -f $model $seuil $deadline
+
+#Creation du ficher tgf
+gcc Lam2TGF.c -o tgf
+./tgf -f $model 
+
+#Calcul de la distribution stationnaire de la matrice re-ordonner
+gcc gthLD.c -o gthLD 
+./gthLD -f $model Rii
+
+#Re-ordonner et Decouper en NCD la matrice
+gcc Re-ordre-Matrice.c -o reorder
+./reorder $model $seuil $deadline
+
+#Calcul de la distribution stationnaire de la matrice re-ordonner
+gcc gthLD.c -o gthLD 
+./gthLD -f $model-reordre Rii
+
+#Generation de la matrice transposee de La matrice A (Nord-Ouest de P)
+gcc convertir.c -o convertir
+./convertir $model-reordre.NO.Rii Cii
+
+#Calcul de la distribution stationnaire en DAG algorithme de A
+gcc Pi-ngreen.c -o ngreen
+./ngreen -f $model-reordre.NO
+
+#Generation de la matrice transposee de La matrice B (Sud-Est de P)
+gcc convertir.c -o convertir
+./convertir $model-reordre.SE.Rii Cii
+
+#Calcul de la distribution stationnaire en DAG algorithme de B
+gcc Pi-ngreen.c -o ngreen
+./ngreen -f $model-reordre.SE
+
+
+ 
+
+
+
+
+
+
+

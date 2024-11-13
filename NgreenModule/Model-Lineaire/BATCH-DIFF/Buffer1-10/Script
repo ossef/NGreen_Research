@@ -1,0 +1,66 @@
+# -----------! pour lancer et obtenir temps d'execution en seconde du script : "time -p ./script" !--------------
+#!/bin/bash
+
+BufferSize='25'; #Capacité de la file
+model='Ngreen-Module';  #Nom du model créé
+seuil='13';
+deadline='3';
+
+if test -e $model.Rii
+then rm *.Rii
+fi
+
+if test -e $model.Cii
+then rm *.Cii
+fi
+
+if test -e $model.cd
+then rm *.cd
+fi
+
+if test -e $model.sz
+then rm *.sz
+fi
+
+if test -e $model.pi
+then rm *.pi
+fi
+
+if test -e $model-reordre.tgf
+then rm $model-reordre.tgf
+fi
+
+
+#Generation de la chaine de markov : Matrice P
+gcc generMarkov.c -o genMarkov
+./genMarkov -f $model $seuil $deadline
+
+
+#Re-ordonner la Matrice P
+gcc Re-ordre-Matrice.c -o reordre
+./reordre $model $seuil $deadline
+
+
+#Creation du ficher tgf
+gcc Lam2TGF.c -o tgf
+./tgf -f $model-reordre 
+
+
+#conversion de la matrice Rii en Cii
+gcc convertir.c -o convertir
+./convertir $model-reordre.Rii Cii
+
+
+#Calcul de la distribution stationnaire en DAG algorithme Modifie pour Batch Diff
+gcc Pi-ngreen.c -o pi-ngreen
+./pi-ngreen -f $model-reordre
+
+
+ 
+
+
+
+
+
+
+

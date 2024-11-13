@@ -1,0 +1,81 @@
+# -----------! pour lancer et obtenir temps d'execution en seconde du script : "time -p ./script" !--------------
+#!/bin/bash
+
+BufferSize='140'; #Capacité de la file
+model='Ngreen-Module-140';  #Nom du model créé
+seuil='120';
+deadline='18';
+
+if test -e $model.Rii
+then rm *.Rii
+fi
+
+if test -e $model.Cii
+then rm *.Cii
+fi
+
+if test -e $model.cd
+then rm *.cd
+fi
+
+if test -e $model.sz
+then rm *.sz
+fi
+
+if test -e $model.pi
+then rm *.pi
+fi
+
+if test -e $model.tgf
+then rm $model.tgf
+fi
+
+
+#Generation de la chaine de markov : Matrice P
+gcc generMarkov.c -o genMarkov -lm
+./genMarkov -f $model $seuil $deadline
+
+#Creation du ficher tgf
+gcc Lam2TGF.c -o tgf
+./tgf -f $model 
+
+#Re-ordonner la matrice
+gcc Re-ordre-Matrice.c -o reorder
+./reorder $model $seuil $deadline
+
+#conversion de la matrice reordonner Rii en Cii
+gcc convertir.c -o convertir
+./convertir $model-reordre.Rii Cii
+
+
+#generation d'Approximation initiale
+gcc generApprox.c -o genApp
+./genApp -f $model-reordre
+
+
+#Calcule Dist Stat grâce a l'algorithme de KMS Ameliorée 
+#gcc AlgoKmsMaj.c -o AlgoKmsMaj -lm
+#time -p ./AlgoKmsMaj -f $model-reordre tarjan exp1
+
+
+#Calcule Dist Stat grâce a l'algorithme de KMS basic (Optimale)
+gcc AlgoKmsOpt.c -o AlgoKmsOpt -lm
+time -p ./AlgoKmsOpt -f $model-reordre tarjan exp1
+
+
+#Calcul de la distribution stationnaire de la matrice re-ordonner
+#gcc gthLD.c -o gthLD 
+#time -p ./gthLD -f $model-reordre Rii
+
+
+
+
+
+ 
+
+
+
+
+
+
+
