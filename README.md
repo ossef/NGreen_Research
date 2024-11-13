@@ -19,4 +19,13 @@ relevance of this work [1] is to propose a trade-off between energy
 efficiency and latency for both opportunistic and reservation
 insertion modes into the ring. A generalisation to non-stationnary arrivals (i.e. with phase modulating) of data packets for NCD (Near Completely Decomposable) Markov chains is presented in [2].
 
+#  Contributors & Copyright
 
+- [Youssef AIT EL MAHJOUB](https://github.com/ossef)
+- This code is open source. The original documents are [1, 2] and [3].
+
+[1] "Performance and energy efficiency analysis in NGREEN optical network", Youssef AIT EL MAHJOUB, Hind CASTEL-TALEB and Jean-Michel FOURNEAU. In 14th International Conference on Wireless and Mobile Computing, Networking and Communications, WiMob, 2018.
+
+[2] "A numerical approach of the analysis of optical container filling", Youssef AIT EL MAHJOUB, Hind CASTEL-TALEB and Jean-Michel FOURNEAU. In 12th EAI International Conference on Performance Evaluation Methodologies and Tools, ValueTools, 2019.
+
+[3] "Performance evaluation of Green IT networks", Youssef AIT EL MAHJOUB. In Phd-thesis, Chapter 4. [link : hal.science](https://hal.science/tel-03215137v1), 2021.
